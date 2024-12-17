@@ -1,21 +1,43 @@
-version: '3.8'
 services:
-  web:
-    build: .
+  app:
+    build:
+      context: https://github.com/frizzle0815/dockerized_klassenkasse.git#main
+    container_name: klassenkasse_app
     ports:
-      - "5000:5000"
+      - "7788:5100"
     volumes:
-      - .:/app
+      - app_data:/app
+    working_dir: /app
+    command: flask run --host=0.0.0.0 --port=5100
     environment:
-      - FLASK_ENV=development
-      - SECRET_KEY=your_secret_key_here
+      FLASK_APP: run.py
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://user:password@db:5432/app_db
     depends_on:
       - db
+
   db:
     image: postgres:15
+    container_name: klassenkasse_db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: app_db
     ports:
-      - "5432:5432"
+      - "5666:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  app_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /volume1/docker/klassenkasse/app
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /volume1/docker/klassenkasse/db
