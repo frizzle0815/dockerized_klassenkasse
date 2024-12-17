@@ -1,27 +1,29 @@
-# Use the official Python image
+# Verwenden des offiziellen Python 3.10 Slim Images
 FROM python:3.10-slim
 
-# Set the working directory
+# Arbeitsverzeichnis setzen
 WORKDIR /app
 
-# Install system dependencies
+# Systemabhängigkeiten installieren
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy only the requirements file first
+# Anforderungen kopieren und installieren
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy the project files into the container
+# Projektdateien kopieren
 COPY . .
 
-# Expose the port Flask will run on
+# Skript zum Warten auf PostgreSQL hinzufügen
+COPY wait-for-postgres.sh /wait-for-postgres.sh
+RUN chmod +x /wait-for-postgres.sh
+
+# Port freigeben
 EXPOSE 5100
 
-# Run the application
-CMD ["python", "run.py"]
+# Startbefehl: Warten auf PostgreSQL und dann die Anwendung starten
+CMD ["/wait-for-postgres.sh", "db", "python", "run.py"]
