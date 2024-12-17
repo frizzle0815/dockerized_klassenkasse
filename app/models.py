@@ -37,3 +37,4 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_organizer = db.Column(db.Boolean, default=False)
     collections = db.relationship('Collection', backref='organizer', lazy=True)
+    
