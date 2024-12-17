@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Organizers</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Organizers</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for organizer in organizers %}
+                <tr>
+                    <td>{{ organizer.email }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('admin.edit_organizer', id=organizer.id) }}">
+                            <input type="email" name="email" placeholder="New email" required>
+                            <input type="password" name="password" placeholder="New password" required>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Add Organizer</h2>
+        <form method="POST" action="{{ url_for('admin.add_organizer') }}">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success">Add</button>
+        </form>
+    </div>
+</body>
+</html>
