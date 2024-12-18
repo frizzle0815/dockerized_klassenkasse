@@ -1,6 +1,7 @@
-from app import db
+
 from flask_login import UserMixin
 from datetime import datetime
+from . import db
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,4 +38,3 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_organizer = db.Column(db.Boolean, default=False)
     collections = db.relationship('Collection', backref='organizer', lazy=True)
-    
